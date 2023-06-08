@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// useQuery & useMutation vs state & effect
 import {
   Container,
   Col,

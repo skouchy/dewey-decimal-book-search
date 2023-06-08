@@ -25,7 +25,7 @@ const resolvers = {
                 throw new Error('This email address does not exist');
             }
             const correctPassword = await user.isCorrectPassword(password);
-            if(!correctPassword) {
+            if (!correctPassword) {
                 throw new Error('User info is not correct, please try again dummy');
             }
 
@@ -37,18 +37,18 @@ const resolvers = {
             if (context.user) {
                 const user = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $push: { savedBooks: bookData }},
+                    { $push: { savedBooks: bookData } },
                     { new: true }
                 )
                 return user;
             }
             throw new Error('You need to be logged in!');
         },
-        removeBook: async(parent, { bookId }, context) => {
+        removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
                 const user = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { savedBooks: bookId }},
+                    { $pull: { savedBooks: { bookId } } },
                     { new: true }
                 )
                 return user;
