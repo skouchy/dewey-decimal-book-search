@@ -1,4 +1,6 @@
 const { User } = require('../models');
+
+const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 
 // TODO: #2 AFTER typeDefs
@@ -9,7 +11,7 @@ const resolvers = {
                 const user = await User.findOne({ _id: context.user._id })
                 return user;
             }
-            throw new Error('Not logged in!');
+            throw new AuthenticationError('Not logged in!');
         }
     },
     Mutation: {
@@ -22,11 +24,11 @@ const resolvers = {
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ email });
             if (!user) {
-                throw new Error('This email address does not exist');
+                throw new AuthenticationError('This email address does not exist');
             }
             const correctPassword = await user.isCorrectPassword(password);
             if (!correctPassword) {
-                throw new Error('User info is not correct, please try again dummy');
+                throw new AuthenticationError('User info is not correct, please try again dummy');
             }
 
             const token = signToken(user);
@@ -42,7 +44,7 @@ const resolvers = {
                 )
                 return user;
             }
-            throw new Error('You need to be logged in!');
+            throw new AuthenticationError('You need to be logged in!');
         },
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
@@ -53,7 +55,7 @@ const resolvers = {
                 )
                 return user;
             }
-            throw new Error('You need to be logged in!');
+            throw new AuthenticationError('You need to be logged in!');
         }
     }
 };
